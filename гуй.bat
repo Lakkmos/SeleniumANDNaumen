@@ -1,0 +1,1 @@
+pyuic5 mass.ui -o mass.py
