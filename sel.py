@@ -18,12 +18,26 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
     def changec(self):
         if self.comboBox.currentText() == "Смена профиля (только из Default)":
             self.label_2.setText('Имя профиля')
+            self.comboBox_1.setVisible(False)
+            self.lineEdit_5.setVisible(False)
+            self.label_6.setVisible(False)
+            self.button.setVisible(False)
+        elif self.comboBox.currentText() == "Назначение СВ":
+            self.label_2.setText('ФИО СВ')
+            self.comboBox_1.setVisible(False)
+            self.lineEdit_5.setVisible(False)
+            self.label_6.setVisible(False)
+            self.button.setVisible(False)
         else:
             self.label_2.setText('Название скила')
+            self.lineEdit_5.setVisible(True)
+            self.label_6.setVisible(True)
+            self.button.setVisible(True)
 
     def take(self):
         global skills
         skills={}
+        self.comboBox_1.clear()
         self.start()
         driver.get("http://10.77.1.111:8080/form?uuid=corebo00000000000mtvuntc1j56fu48&activeComponent=Employee.ListsParent.ListsParent2.SkillList.addObjectSkillRelation")
         el = driver.find_element_by_id("htmlId")
@@ -32,9 +46,10 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
         elem = el.find_elements_by_tag_name('a')
         self.comboBox_1.setVisible(True)
         for e in elem:
-            skills[e.text] = e.get_attribute('rel')
-            self.comboBox_1.addItem(str(e.text))
-        #print(skills)
+            skills[str(e.text)] = e.get_attribute('rel')
+            if str(e.text) != '':
+                self.comboBox_1.addItem(str(e.text))
+        driver.close()
 
     def push(self):
         global array
@@ -140,6 +155,7 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
 
 
     def add_skill(self, u):
+        global skills
         driver.get(u)
         addsk = driver.find_element_by_id("Employee.ListsParent.ListsParent2.SkillList.addObjectSkillRelation")
         window_before = driver.window_handles[0]
@@ -149,24 +165,36 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
         el = driver.find_element_by_id("htmlId")
         time.sleep(1)
         el.find_element_by_id("skill_outer").click()
-        text = self.lineEdit.text()
-        selects = el.find_elements_by_tag_name('a')
-        for select in selects:
-            #print(select.text)
-            if (select.text.find(text)!=-1) and (select.text!='ОбучениеТранскомплекс (1 - 10)') :
-                text=str(select.text)
-        #print(text)
-        el.find_element_by_xpath('//a[@title="'+text+'"]').click()
-        elem = el.find_element_by_id("skill_box")
-        elem.click()
-        el.find_element_by_xpath('//a[@title="'+text+'"]').click()
-        elem = el.find_element_by_id("min-level")
-        elem.clear()
-        level = self.lineEdit_5.text()
-        elem.send_keys(level)
-        time.sleep(1)
-        driver.find_element_by_id("add").click()
-        driver.switch_to_window(window_before)
+        if self.comboBox_1.isVisible()==True:
+            text = skills.get(self.comboBox_1.currentText())
+            el.find_element_by_xpath('//a[@rel="' + text + '"]').click()
+            elem = el.find_element_by_id("min-level")
+            elem.clear()
+            level = self.lineEdit_5.text()
+            elem.send_keys(level)
+            time.sleep(1)
+            driver.find_element_by_id("add").click()
+            driver.switch_to_window(window_before)
+
+        else:
+            text = self.lineEdit.text()
+            selects = el.find_elements_by_tag_name('a')
+            for select in selects:
+                if (select.text.find(text) != -1) and (select.text != 'ОбучениеТранскомплекс (1 - 10)'):
+                    text = str(select.text)
+            # print(text)
+            el.find_element_by_xpath('//a[@title="' + text + '"]').click()
+            elem = el.find_element_by_id("skill_box")
+            elem.click()
+            el.find_element_by_xpath('//a[@title="' + text + '"]').click()
+            elem = el.find_element_by_id("min-level")
+            elem.clear()
+            level = self.lineEdit_5.text()
+            elem.send_keys(level)
+            time.sleep(1)
+            driver.find_element_by_id("add").click()
+            driver.switch_to_window(window_before)
+
 
     def change_profile(self,u):
         driver.get(u)

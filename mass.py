@@ -96,4 +96,5 @@ class Ui_Form(object):
         self.checkBox.setText(_translate("Dialog", "Оставить Firefox открытым"))
         self.lineEdit_3.setText(_translate("Dialog", "msv_adm"))
         self.lineEdit_4.setText(_translate("Dialog", "1234"))
+        self.lineEdit_5.setText(_translate("Dialog", "1"))
 
