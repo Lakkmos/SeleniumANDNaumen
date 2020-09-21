@@ -182,7 +182,6 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
             for select in selects:
                 if (select.text.find(text) != -1) and (select.text != 'ОбучениеТранскомплекс (1 - 10)'):
                     text = str(select.text)
-            # print(text)
             el.find_element_by_xpath('//a[@title="' + text + '"]').click()
             elem = el.find_element_by_id("skill_box")
             elem.click()
@@ -196,7 +195,7 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
             driver.switch_to_window(window_before)
 
 
-    def change_profile(self,u):
+    def change_profile(self, u):
         driver.get(u)
         chang = driver.find_element_by_id("Employee.ListsParent.ListsParent1.IASEmployeeCard.EditIASEmployee")
         window_before = driver.window_handles[0]
@@ -254,18 +253,25 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
     def add_sv(self,u):
         driver.get(u)
         time.sleep(1)
-        elem = driver.find_element_by_class_name("b-grid__actions")
-        print(elem)
-        #elem = elem.find_elements_by_class_name("b - grid__action")
-        #print('2')
-        #for e in elem:
-          #  print ("1")
-        #chang.click
-        #print(chang.get_attribute("href"))
-        #window_before = driver.window_handles[0]
-        #chang.click()
-        #window_after = driver.window_handles[1]
-        #driver.switch_to_window(window_after)
+        window_before = driver.window_handles[0]
+        driver.find_element_by_xpath('//a[@id="OU.OUMainCard.AddOUSupervisor"]').click()
+        window_after = driver.window_handles[1]
+        driver.switch_to_window(window_after)
+        time.sleep(1)
+        elem = driver.find_element_by_id("supervisor_search_str")
+        newSV = self.lineEdit.text()
+        elem.send_keys(newSV)
+        driver.find_element_by_xpath('//i[@class="fa fa-search"]').click()
+        time.sleep(1)
+        driver.find_element_by_xpath('//a[@id="supervisor_box"]').click()
+        driver.find_element_by_partial_link_text(newSV).click()
+        driver.find_element_by_xpath('//button[@id="add"]').click()
+        time.sleep(1)
+        driver.switch_to_window(window_before)
+
+
+
+
 
 
 
@@ -283,10 +289,10 @@ class massshoting (QtWidgets.QMainWindow, mass.Ui_Form):
 #driver.close()
 
 def main():
-    app = QtWidgets.QApplication(sys.argv)  # Новый экземпляр QApplication
-    window = massshoting()  # Создаём объект класса ExampleApp
-    window.show()  # Показываем окно
-    app.exec_()  # и запускаем приложение
+    app = QtWidgets.QApplication(sys.argv)
+    window = massshoting()
+    window.show()
+    app.exec_()
 
-if __name__ == '__main__':  # Если мы запускаем файл напрямую, а не импортируем
-    main()  # то запускаем функцию main()
+if __name__ == '__main__':
+    main()

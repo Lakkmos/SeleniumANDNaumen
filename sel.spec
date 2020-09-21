@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['sel.py'],
+a = Analysis(['C:\\Users\\UserPC\\Desktop\\untitled1\\sel.py'],
              pathex=['C:\\Users\\UserPC\\Desktop\\untitled1'],
              binaries=[],
              datas=[],
@@ -30,4 +30,4 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=False )
